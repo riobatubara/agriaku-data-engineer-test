@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: agriakutest
+      POSTGRES_PASSWORD: agriakutest123
+      POSTGRES_DB: agriakutestdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  airflow-webserver:
+    build: .
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__EXECUTOR: "SequentialExecutor"
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://agriakutest:agriakutest123@postgres:5432/agriakutestdb
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./etl_pipeline.py:/opt/airflow/etl_pipeline.py
+      - ./data:/opt/airflow/data
+      - ./output:/opt/airflow/output
+    ports:
+      - "8080:8080"
+    command: webserver
+
+  airflow-scheduler:
+    build: .
+    restart: always
+    depends_on:
+      - airflow-webserver
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./etl_pipeline.py:/opt/airflow/etl_pipeline.py
+      - ./data:/opt/airflow/data
+      - ./output:/opt/airflow/output
+    command: scheduler
+
+volumes:
+  postgres_data:
