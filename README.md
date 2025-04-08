@@ -8,13 +8,15 @@ Created as part of the **Senior Data Engineer Technical Test** at Agriaku. Built
 
 ```
 agriaku-data-engineer-test/
-├── dags/                          # Airflow DAGs
+├── dags/                         # Airflow DAGs
+│   ├── airflow_etl_dag.py        # Airflow DAG definition
 │   └── etl_pipeline.py           # Main ETL DAG
 ├── data/                         # Source data only (CSV files)
 ├── output/                       # Data mart output CSV
 ├── processed_files/              # Tracks already processed files
 │   └── file_tracker.csv
-├── docker-compose.yml            # Docker services
+├── docker-compose.yaml           # Docker services
+├── Dockerfile                    # Docker file
 ├── requirements.txt              # Python dependencies
 ├── README.md                     # Project instructions
 ```
@@ -40,7 +42,7 @@ git clone https://github.com/riobatubara/agriaku-data-engineer-test.git
 cd agriaku-data-engineer-test
 ```
 
-### 2. Add Your CSV Files
+### 2. (Optional) Add Your CSV Files
 Put raw timestamped CSVs into the `/data/` directory. Example filenames:
 - `students_20250409_103000.csv`
 - `courses_20250409_103000.csv`
