@@ -1,8 +1,9 @@
-version: '3'
+version: "3.9"
 
 services:
   postgres:
     image: postgres:13
+    container_name: postgres
     environment:
       POSTGRES_USER: agriakutest
       POSTGRES_PASSWORD: agriakutest123
@@ -12,35 +13,28 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  airflow-webserver:
-    build: .
-    restart: always
+  airflow:
+    image: apache/airflow:2.7.3
+    container_name: airflow
     depends_on:
       - postgres
     environment:
-      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
-      AIRFLOW__CORE__EXECUTOR: "SequentialExecutor"
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://agriakutest:agriakutest123@postgres:5432/agriakutestdb
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://agriakutest:agriakutest123@postgres:5432/agriakutestdb
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
     volumes:
       - ./dags:/opt/airflow/dags
-      - ./etl_pipeline.py:/opt/airflow/etl_pipeline.py
-      - ./data:/opt/airflow/data
-      - ./output:/opt/airflow/output
+      - ./data:/agriaku-data-engineer-test/data
+      - ./output:/agriaku-data-engineer-test/output
+      - ./processed_files:/agriaku-data-engineer-test/processed_files
     ports:
       - "8080:8080"
-    command: webserver
-
-  airflow-scheduler:
-    build: .
+    command: >
+      bash -c "
+        airflow db migrate &&
+        airflow users create --username admin --password admin --firstname Airflow --lastname Admin --role Admin --email admin@example.com &&
+        airflow scheduler & airflow webserver"
     restart: always
-    depends_on:
-      - airflow-webserver
-    volumes:
-      - ./dags:/opt/airflow/dags
-      - ./etl_pipeline.py:/opt/airflow/etl_pipeline.py
-      - ./data:/opt/airflow/data
-      - ./output:/opt/airflow/output
-    command: scheduler
 
 volumes:
   postgres_data:
