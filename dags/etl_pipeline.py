@@ -32,11 +32,16 @@ def read_tracker():
     return pd.read_csv(TRACKER_PATH)
 
 def update_tracker(filename):
-    tracker = read_tracker()
-    if filename not in tracker["filename"].values:
-        tracker.loc[len(tracker)] = [filename]
-        tracker.to_csv(TRACKER_PATH, index=False)
-        log(f"Updated tracker with: {filename}")
+    try:
+        tracker = read_tracker()
+        if filename not in tracker["filename"].values:
+            tracker.loc[len(tracker)] = [filename]
+            tracker.to_csv(TRACKER_PATH, index=False)
+            log(f"Updated tracker with: {filename}")
+    except PermissionError:
+        log(f"Warning: Permission denied when updating tracker for: {filename} — skipping.")
+    except Exception as e:
+        log(f"Error updating tracker for {filename}: {e}")
 
 def get_latest_file(prefix):
     files = glob.glob(os.path.join(data_dir, f"{prefix}_*.csv"))
@@ -152,9 +157,11 @@ def run_etl():
 
         load_csv_to_db(summary, "report_weekly_attendance_pct")
 
-        output_file = os.path.join(output_dir, "report_weekly_attendance_pct.csv")
+        timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
+        output_filename = f"report_weekly_attendance_{timestamp_str}.csv"
+        output_file = os.path.join(output_dir, output_filename)
         summary.to_csv(output_file, index=False)
-        log(f"📤 Exported report to {output_file}")
+        log(f"Exported report to {output_file}")
 
         # Mark processed
         for f in file_map.values():

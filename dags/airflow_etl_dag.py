@@ -21,7 +21,7 @@ default_args = {
 }
 
 with DAG(
-    dag_id="etl_course_attendance_pipeline",
+    dag_id="etl_pipeline",
     default_args=default_args,
     description="ETL pipeline for processing university course attendance data",
     schedule_interval=None,  # Or e.g., '0 2 * * *' for daily at 2 AM
