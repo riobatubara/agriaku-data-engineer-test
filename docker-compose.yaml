@@ -1,9 +1,10 @@
-version: "3.9"
+version: '3.8'
 
 services:
   postgres:
     image: postgres:13
-    container_name: postgres
+    container_name: agriaku_postgres
+    restart: always
     environment:
       POSTGRES_USER: agriakutest
       POSTGRES_PASSWORD: agriakutest123
@@ -13,28 +14,52 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  airflow:
+  airflow-webserver:
     image: apache/airflow:2.7.3
-    container_name: airflow
+    container_name: agriaku_airflow_webserver
     depends_on:
       - postgres
+    restart: always
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://agriakutest:agriakutest123@postgres:5432/agriakutestdb
+      AIRFLOW__WEBSERVER__SECRET_KEY: "this_should_be_a_secret_key_123"
       AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/dags
     volumes:
       - ./dags:/opt/airflow/dags
-      - ./data:/agriaku-data-engineer-test/data
-      - ./output:/agriaku-data-engineer-test/output
-      - ./processed_files:/agriaku-data-engineer-test/processed_files
+      - ./data:/opt/airflow/data
+      - ./output:/opt/airflow/output
+      - ./processed_files:/opt/airflow/processed_files
+      - ./etl_pipeline.py:/opt/airflow/etl_pipeline.py  # <— Allow DAG to import your script
     ports:
       - "8080:8080"
     command: >
       bash -c "
         airflow db migrate &&
-        airflow users create --username admin --password admin --firstname Airflow --lastname Admin --role Admin --email admin@example.com &&
-        airflow scheduler & airflow webserver"
+        airflow users create --username admin --firstname Admin --lastname User --role Admin --email admin@airflow.local --password admin &&
+        airflow webserver
+      "
+
+  airflow-scheduler:
+    image: apache/airflow:2.7.3
+    container_name: agriaku_airflow_scheduler
+    depends_on:
+      - airflow-webserver
     restart: always
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://agriakutest:agriakutest123@postgres:5432/agriakutestdb
+      AIRFLOW__WEBSERVER__SECRET_KEY: "this_should_be_a_secret_key_123"
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/dags
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./data:/opt/airflow/data
+      - ./output:/opt/airflow/output
+      - ./processed_files:/opt/airflow/processed_files
+      - ./etl_pipeline.py:/opt/airflow/etl_pipeline.py
+    command: scheduler
 
 volumes:
   postgres_data:

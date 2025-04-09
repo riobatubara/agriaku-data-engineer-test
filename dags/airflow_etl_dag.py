@@ -1,31 +1,47 @@
-# dags/airflow_etl_dag.py
-
 from airflow import DAG
-from airflow.operators.python_operator import PythonOperator
-from datetime import datetime
+from airflow.operators.python import PythonOperator
+from datetime import datetime, timedelta
+import logging
 import sys
 import os
 
-# Add path to import your pipeline
-sys.path.append(os.path.join(os.path.dirname(__file__)))
+# Add project root to sys.path for module imports
+sys.path.append("/opt/airflow")
+
+# Import your ETL script
 from etl_pipeline import run_etl
 
 default_args = {
-    'owner': 'airflow',
-    'start_date': datetime(2024, 1, 1),
-    'retries': 1,
+    "owner": "airflow",
+    "depends_on_past": False,
+    "email_on_failure": True,
+    "email": ["data.engineer@agriaku.test"],
+    "retries": 2,
+    "retry_delay": timedelta(minutes=3),
 }
 
 with DAG(
-    dag_id='weekly_attendance_etl',
+    dag_id="etl_course_attendance_pipeline",
     default_args=default_args,
-    schedule_interval='@daily',  # or '@once' for testing
-    catchup=False
+    description="ETL pipeline for processing university course attendance data",
+    schedule_interval=None,  # Or e.g., '0 2 * * *' for daily at 2 AM
+    start_date=datetime(2024, 1, 1),
+    catchup=False,
+    tags=["etl", "attendance", "agriaku"]
 ) as dag:
 
-    etl_task = PythonOperator(
-        task_id='run_etl_pipeline',
-        python_callable=run_etl
+    def run_etl_with_logging():
+        try:
+            logging.info("Starting ETL pipeline execution...")
+            run_etl()
+            logging.info("ETL pipeline executed successfully.")
+        except Exception as e:
+            logging.error(f"ETL pipeline failed: {e}")
+            raise
+
+    run_etl_task = PythonOperator(
+        task_id="run_etl_pipeline",
+        python_callable=run_etl_with_logging
     )
 
-    etl_task
+    run_etl_task
