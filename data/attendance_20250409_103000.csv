@@ -1,4 +1,4 @@
-attendance_id,enrollment_id,semester_id,week_id,is_present
+attendance_id,enrollment_id,week_id,semester_id,is_present
 A001,E001,1,1,1
 A002,E001,2,1,1
 A003,E001,3,1,0
