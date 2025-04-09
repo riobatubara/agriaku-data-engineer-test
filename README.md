@@ -19,6 +19,8 @@ agriaku-data-engineer-test/
 ├── Dockerfile                    # Docker file
 ├── requirements.txt              # Python dependencies
 ├── README.md                     # Project instructions
+├── start.sh                      # Bash script to run Dockerized services
+├── stop.sh                       # Bash script to stop all Dockerized services
 ```
 
 ---
