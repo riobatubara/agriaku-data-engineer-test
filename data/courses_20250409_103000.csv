@@ -1,4 +1,5 @@
-course_id,course_name,semester_id
-C101,Data Structures,S2024
-C102,Algorithms,S2024
-C103,Calculus I,S2024
+course_id,course_name
+C001,Data Structures
+C002,Algorithms
+C003,Calculus I
+C004,Statistic
