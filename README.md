@@ -1,6 +1,6 @@
 # Agriaku Data Engineer Test
 
-Created as part of the **Senior Data Engineer Technical Test** at Agriaku. Built with ❤️ using Apache Airflow, PostgreSQL, and Docker Compose.
+Created as part of the **Senior Data Engineer Technical Test** at Agriaku. Built with using Apache Airflow, PostgreSQL, and Docker Compose.
 
 ---
 
@@ -53,26 +53,31 @@ Put raw timestamped CSVs into the `/data/` directory. Example filenames:
 
 ### 3. Start Dockerized Services
 ```bash
-docker-compose up --build
+./start.sh
+```
+
+### 4. Stop All Dockerized Services
+```bash
+./stop.sh
 ```
 
 This launches:
 - PostgreSQL on port `5432`
 - Airflow webserver on port `8080`
 
-### 4. Access Airflow Web UI
+### 5. Access Airflow Web UI
 Go to: [http://localhost:8080](http://localhost:8080)
-- Username: `airflow`
-- Password: `airflow`
+- Username: `admin`
+- Password: `admin`
 
-Enable and trigger the DAG named `agriaku_etl_pipeline`.
+Enable and trigger the DAG named `etl_pipeline`.
 
 > 💡 Tip: You can manually trigger or schedule the DAG from the UI.
 
-### 5. View the Output
+### 6. View the Output
 The final data mart CSV will be saved to:
 ```
-/output/report_weekly_attendance_pct.csv
+/output/report_weekly_attendance_xxxxxxxx_xxxxxx.csv
 ```
 
 ---
