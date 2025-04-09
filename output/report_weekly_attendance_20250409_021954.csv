@@ -1,0 +1,58 @@
+semester_id,week_id,course_name,attendance_pct
+1,1,Algorithms,100.0
+1,1,Calculus I,100.0
+1,1,Data Structures,100.0
+1,2,Algorithms,100.0
+1,2,Calculus I,100.0
+1,2,Data Structures,100.0
+1,3,Algorithms,100.0
+1,3,Calculus I,100.0
+1,3,Data Structures,0.0
+1,4,Algorithms,100.0
+1,4,Calculus I,100.0
+1,4,Data Structures,100.0
+1,5,Algorithms,100.0
+1,5,Calculus I,0.0
+1,5,Data Structures,100.0
+1,6,Algorithms,100.0
+1,6,Data Structures,100.0
+1,7,Algorithms,100.0
+1,7,Data Structures,100.0
+1,8,Algorithms,100.0
+1,8,Data Structures,100.0
+1,9,Algorithms,100.0
+1,9,Data Structures,0.0
+1,10,Algorithms,100.0
+1,10,Data Structures,100.0
+1,11,Algorithms,100.0
+1,11,Data Structures,100.0
+1,12,Algorithms,100.0
+1,12,Data Structures,100.0
+1,13,Algorithms,100.0
+1,13,Data Structures,100.0
+2,1,Data Structures,100.0
+2,1,Statistic,100.0
+2,2,Data Structures,0.0
+2,2,Statistic,100.0
+2,3,Data Structures,100.0
+2,3,Statistic,100.0
+2,4,Data Structures,0.0
+2,4,Statistic,100.0
+2,5,Data Structures,100.0
+2,5,Statistic,100.0
+2,6,Data Structures,100.0
+2,6,Statistic,100.0
+2,7,Data Structures,0.0
+2,7,Statistic,100.0
+2,8,Data Structures,0.0
+2,8,Statistic,0.0
+2,9,Data Structures,100.0
+2,9,Statistic,0.0
+2,10,Data Structures,100.0
+2,10,Statistic,100.0
+2,11,Data Structures,100.0
+2,11,Statistic,100.0
+2,12,Data Structures,0.0
+2,12,Statistic,100.0
+2,13,Data Structures,100.0
+2,13,Statistic,100.0
